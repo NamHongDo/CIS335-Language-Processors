@@ -22,7 +22,7 @@ public class AddressCalculation {
 	public int getInstructionSize(String mnemonic) {
 		if(mnemonic!=null){
 			if (mnemonic.charAt(0)=='+'){
-				return 4;		
+				return 4;
 			}else if((mnemonic.substring(mnemonic.length()-1).charAt(0))=='R'){
 				return 2;
 			}else if(mnemonic.equals("BASE")||mnemonic.equals("START")){
@@ -33,7 +33,7 @@ public class AddressCalculation {
 				return 1;
 			}else{
 				return 3;
-			}		
+			}
 		}else{
 			return 0;
 		}

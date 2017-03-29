@@ -19,7 +19,7 @@ public class OCCalculation {
 
 	public int OPcode(String Mnemonic){//OP code for each Mnemonic
 		if(Mnemonic.equals("STL")){
-			return 0x14;	
+			return 0x14;
 		}else if(Mnemonic.equals("LDB")){
 			return 0x68;
 		}else if(Mnemonic.equals("+JSUB")||Mnemonic.equals("JSUB")){
@@ -73,7 +73,7 @@ public class OCCalculation {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public String getObjectCode(int count){//method to access the object code 
+	public String getObjectCode(int count){//method to access the object code
 		return ObjectCodeTable.get(count);
 	}
 	public void OBJcodeinput(int count, String objcode) {//method to store object code into a hash table

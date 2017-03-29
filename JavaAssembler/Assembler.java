@@ -1,8 +1,7 @@
 /*Name: Nam Do
- * CIS335 proj 6: write a simple assembler that read a sample sic/xe code and output 
+ * CIS335 proj 6: write a simple assembler that read a sample sic/xe code and output
  * an lst file and obj file*/
 
-package cis335project6;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +17,7 @@ public class Assembler {
 	static Pass1Table pass1Table=new Pass1Table(); // hash table for storing label and corresponding address
 	static Pass1Table addressTable=new Pass1Table();
 	static OCCalculation ObjectCodeTable=new OCCalculation();
-	static ArrayList<String[]> e = new ArrayList<String[]>(); //array list for storing lines from main.asm file 
+	static ArrayList<String[]> e = new ArrayList<String[]>(); //array list for storing lines from main.asm file
 	static ArrayList<String>d=new ArrayList<String>();
 	static OCCalculation sol=new OCCalculation();
 	static StringBuilder OBJcode = new StringBuilder();
@@ -28,7 +27,7 @@ public class Assembler {
 		sample = new File(args[0]);
 		obj = new File(sample.getName().substring(0, sample.getName().lastIndexOf('.')) + ".obj");
 		lst = new File(sample.getName().substring(0, sample.getName().lastIndexOf('.')) + ".lst");
-		BufferedReader asmLines= new BufferedReader(new FileReader(new File(args[0])));	
+		BufferedReader asmLines= new BufferedReader(new FileReader(new File(args[0])));
 		String stringsToBeChecked;	int count =1;
 		while((stringsToBeChecked=asmLines.readLine())!=null){ //looping through each line in main.asm and add to the a String array until we reach the end of file
 			list.add(stringsToBeChecked);
@@ -58,11 +57,11 @@ public class Assembler {
 							str1[i+1]=str1[i+1].substring(5);
 						}else{
 							str1[i]="STX";
-							str1[i+1]=str1[i+1].substring(5);		
+							str1[i+1]=str1[i+1].substring(5);
 						}
 					}else if(str1[i].equals("+MOV")){
 						str1[i]="+STT";
-						str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));	
+						str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));
 					}else{
 						if((str1[i+1].substring(str1[i+1].length()-4)).charAt(2)=='B'){
 							str1[i]="LDB";
@@ -70,7 +69,7 @@ public class Assembler {
 
 						}else if((str1[i+1].substring(str1[i+1].length()-4)).charAt(2)=='A'){
 							str1[i]="LDA";
-							str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));	
+							str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));
 						}else if((str1[i+1].substring(str1[i+1].length()-4)).charAt(2)=='D'){
 							str1[i]="LDX";
 							str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));
@@ -79,7 +78,7 @@ public class Assembler {
 							str1[i+1]=str1[i+1].substring(0,str1[i+1].indexOf(','));
 						}
 					}
-				}	
+				}
 			}
 			if (str1!=null){
 				if(str1.length==3){			//locate the Mnemonic in each line
@@ -125,13 +124,13 @@ public class Assembler {
 		 *PASS 2*
 		 **/
 		int count1=2; int count2;
-		for(int i=2; i<e.size()-1;i++){     
+		for(int i=2; i<e.size()-1;i++){
 			String Mnemonic;
 			String destination;
 			if(e.get(i).length==3){				//identify which String array element is Mnemonic and argument
 				Mnemonic=e.get(i)[1];
 				destination=e.get(i)[2];
-			}else if(e.get(i).length==2){	
+			}else if(e.get(i).length==2){
 				Mnemonic=e.get(i)[0];
 				destination=e.get(i)[1];
 			}else{
@@ -142,9 +141,9 @@ public class Assembler {
 			if(Mnemonic.equals("CLEAR")||Mnemonic.equals("COMPR")||Mnemonic.equals("TIXR")){
 				first2=sol.OPcode(Mnemonic);
 			}else if(destination.charAt(0)=='#'){
-				first2=sol.OPcode(Mnemonic)+0x01;	
+				first2=sol.OPcode(Mnemonic)+0x01;
 			}else if(destination.charAt(0)=='@'){
-				first2=sol.OPcode(Mnemonic)+0x02;	
+				first2=sol.OPcode(Mnemonic)+0x02;
 			}else{
 				first2=sol.OPcode(Mnemonic)+0x03;
 			}
@@ -174,28 +173,28 @@ public class Assembler {
 			if(destination.charAt(0)==('#')||destination.charAt(0)=='@'){
 				destination=destination.substring(1);}
 			//get the address of Labels from Pass1 table to calculate displacement
-			if(Character.isDigit((destination.charAt(0)))){	
+			if(Character.isDigit((destination.charAt(0)))){
 				displacement=(Long.parseLong(destination));
 			}else if(flag==0x04){	//extended mode
 				displacement=000;
-			}else if(Mnemonic.charAt(0)=='+'){		
+			}else if(Mnemonic.charAt(0)=='+'){
 				displacement=(Long.parseLong(pass1Table.getAddress(destination),16));
 			}else if(Mnemonic.equals("STCH")||Mnemonic.equals("LDCH")){
 				displacement=(Long.parseLong(pass1Table.getAddress("BUFFER"),16)-Long.parseLong(pass1Table.getAddress("LENGTH"),16));
 			}else if(pass1Table.containsKey(destination)){
-				displacement=(Long.parseLong(pass1Table.getAddress(destination),16)-Long.parseLong(addressTable.getAddress1(count1),16));			
+				displacement=(Long.parseLong(pass1Table.getAddress(destination),16)-Long.parseLong(addressTable.getAddress1(count1),16));
 			}else if(Mnemonic.equals("CLEAR")||Mnemonic.equals("TIXR")){
 				displacement=register.getNumber(destination);
 			}else{
 				displacement=0;
-			}	
+			}
 			//Append op code, flag and displacement into Object code
 			if(Mnemonic.equals("CLEAR")||Mnemonic.equals("TIXR")){
 				OBJcode.append((Integer.toHexString(first2))).append(Long.toHexString(displacement));// use String builder to easily manipulate strings
-			}else if(Mnemonic.equals("BYTE")&&destination.equals("C'EOF'")){	
+			}else if(Mnemonic.equals("BYTE")&&destination.equals("C'EOF'")){
 				OBJcode.append("454F46");
 			}else if(destination.equals("X'F3'")){
-				OBJcode.append("F3");	
+				OBJcode.append("F3");
 			}else if(destination.equals("X'05'")){
 				OBJcode.append("05");
 			}else if(destination.charAt(0)=='%'&&destination.length()>4){	//case when there are two registers
@@ -212,11 +211,11 @@ public class Assembler {
 			}else{
 				OBJcode.append((Integer.toHexString(first2))).append(Integer.toHexString(flag)).append('0').append(Long.toHexString(displacement));
 			}
-			String objcode;		
+			String objcode;
 			if(Mnemonic.equals("RESW")||Mnemonic.equals("RESB")){//case for directives
 				objcode=null;
 			}else{
-				objcode=OBJcode.toString().toUpperCase();}	
+				objcode=OBJcode.toString().toUpperCase();}
 			OBJcode.delete(0,OBJcode.length());
 			ObjectCodeTable.OBJcodeinput(count2,objcode);
 		}
@@ -238,6 +237,3 @@ public class Assembler {
 	}
 
 }
-
-
-
