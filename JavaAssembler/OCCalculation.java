@@ -3,7 +3,6 @@ package cis335project6;
 import java.util.HashMap;
 //this class is used to aid calculating Object code and store the values into a table
 public class OCCalculation {
-	int op;
 	int count;
 	String Mnemonic;
 	private  HashMap<Integer,String> ObjectCodeTable=new HashMap<>();
